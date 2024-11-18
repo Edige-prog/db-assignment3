@@ -7,12 +7,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, func
 import app.forms as f
 
-from app import create_app
 
 app = Flask(__name__, template_folder='app/templates')
 Bootstrap5(app)
 
 
+encoded_password = urllib.parse.quote_plus('edigescode')
 # Load environment variables or use default if not set
 
 DATABASE_URL = 'postgresql://edigeakimali:xT7iTshsBmjufB6ZELMPDgDLAWsm3IUH@dpg-csto23ogph6c739hoacg-a/assignment3_z0bg'
