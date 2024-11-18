@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+        }
+
+        header .left {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        header .center {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 50px); /* Adjust height to exclude header */
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s ease;
+            margin: 5px 0;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="left">Health System</div>
+        <div class="center">Users</div>
+    </header>
+    <div class="button-container">
+        <button onclick="window.location='{{ url_for('index') }}'">Main Page</button>
+        <button onclick="window.location='{{ url_for('create_user') }}'">Create User</button>
+        <button onclick="window.location='{{ url_for('users') }}'">View Users</button>
+        <button onclick="window.location='{{ url_for('delete_user') }}'">Delete Users</button>
+    </div>
+</body>
+</html>
