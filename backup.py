@@ -48,8 +48,8 @@ class DiseaseType(Base):
     id = Column(Integer, primary_key=True)
     description = Column(String(140))
 
-    diseases = relationship("Disease", back_populates="disease_type")
-    specializations = relationship("Specialize", back_populates="disease_type")
+    diseases = relationship("Disease", back_populates="diseasetype")
+    specializations = relationship("Specialize", back_populates="diseasetype")
 
 
 # Define User table
@@ -97,8 +97,8 @@ class PublicServant(Base):
     email = Column(String(60), ForeignKey('users.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     department = Column(String(50))
 
-    user = relationship("User", back_populates="public_servant")
-    records = relationship("Record", back_populates="public_servant")
+    user = relationship("User", back_populates="publicservant")
+    records = relationship("Record", back_populates="publicservant")
 
 
 # Define Disease table
@@ -108,9 +108,9 @@ class Disease(Base):
     disease_code = Column(String(50), primary_key=True)
     pathogen = Column(String(20))
     description = Column(String(140))
-    id = Column(Integer, ForeignKey('disease_type.id', onupdate='CASCADE', ondelete='CASCADE'))
+    id = Column(Integer, ForeignKey('diseasetype.id', onupdate='CASCADE', ondelete='CASCADE'))
 
-    disease_type = relationship("DiseaseType", back_populates="diseases")
+    diseasetype = relationship("DiseaseType", back_populates="diseases")
     discovers = relationship("Discover", back_populates="disease")
     patients = relationship("PatientDisease", back_populates="disease")
     records = relationship("Record", back_populates="disease")
@@ -143,10 +143,10 @@ class PatientDisease(Base):
 class Specialize(Base):
     __tablename__ = 'specialize'
 
-    id = Column(Integer, ForeignKey('disease_type.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    id = Column(Integer, ForeignKey('diseasetype.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     email = Column(String(60), ForeignKey('doctor.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
 
-    disease_type = relationship("DiseaseType", back_populates="specializations")
+    diseasetype = relationship("DiseaseType", back_populates="specializations")
     doctor = relationship("Doctor", back_populates="specializations")
 
 
