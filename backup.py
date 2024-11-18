@@ -17,7 +17,7 @@ Bootstrap5(app)
 encoded_password = urllib.parse.quote_plus('edigescode')
 # Load environment variables or use default if not set
 
-DATABASE_URL = f"postgresql+pg8000://edigeakimali:{encoded_password}@localhost:5433/healthsystem"
+DATABASE_URL = "postgresql://edigeakimali:xT7iTshsBmjufB6ZELMPDgDLAWsm3IUH@dpg-csto23ogph6c739hoacg-a/assignment3_z0bg"
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
