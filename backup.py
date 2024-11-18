@@ -29,151 +29,40 @@ db = SQLAlchemy(app)
 
 Base = declarative_base()
 
-
 # Define Country table
-class Country(Base):
-    __tablename__ = 'country'
+class User(db.Model):
+    __table__ = db.Table('users', db.metadata, autoload_with=engine)
 
-    cname = Column(String(50), primary_key=True)
-    population = Column(BigInteger)
+class Doctor(db.Model):
+    __table__ = db.Table('doctor', db.metadata, autoload_with=engine)
 
-    users = relationship("User", back_populates="country")
-    discovers = relationship("Discover", back_populates="country")
-    records = relationship("Record", back_populates="country")
+class Patient(db.Model):
+    __table__ = db.Table('patients', db.metadata, autoload_with=engine)
 
+class PatientDisease(db.Model):
+    __table__ = db.Table('patientdisease', db.metadata, autoload_with=engine)
 
-# Define DiseaseType table
-class DiseaseType(Base):
-    __tablename__ = 'diseasetype'
+class Country(db.Model):
+    __table__ = db.Table('country', db.metadata, autoload_with=engine)
 
-    id = Column(Integer, primary_key=True)
-    description = Column(String(140))
+class Record(db.Model):
+    __table__ = db.Table('record', db.metadata, autoload_with=engine)
 
-    diseases = relationship("Disease", back_populates="diseasetype")
-    specializations = relationship("Specialize", back_populates="diseasetype")
+class Specialize(db.Model):
+    __table__ = db.Table('specialize', db.metadata, autoload_with=engine)
 
+class PublicServant(db.Model):
+    __table__ = db.Table('publicservant', db.metadata, autoload_with=engine)
 
-# Define User table
-class User(Base):
-    __tablename__ = 'users'
+class Disease(db.Model):
+    __table__ = db.Table('disease', db.metadata, autoload_with=engine)
 
-    email = Column(String(60), primary_key=True)
-    name = Column(String(30))
-    surname = Column(String(40))
-    salary = Column(Integer)
-    phone = Column(String(20))
-    cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='SET NULL'))
+class DiseaseType(db.Model):
+    __table__ = db.Table('diseasetype', db.metadata, autoload_with=engine)
 
-    country = relationship("Country", back_populates="users")
-    patient = relationship("Patient", uselist=False, back_populates="user")
-    doctor = relationship("Doctor", uselist=False, back_populates="user")
-    publicservant = relationship("PublicServant", uselist=False, back_populates="user")
-    diseases = relationship("PatientDisease", back_populates="user")
+class Discover(db.Model):
+    __table__ = db.Table('discover', db.metadata, autoload_with=engine)
 
-
-# Define Patients table
-class Patient(Base):
-    __tablename__ = 'patients'
-
-    email = Column(String(60), ForeignKey('users.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-
-    user = relationship("User", back_populates="patient")
-
-
-# Define Doctor table
-class Doctor(Base):
-    __tablename__ = 'doctor'
-
-    email = Column(String(60), ForeignKey('users.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    degree = Column(String(20))
-
-    user = relationship("User", back_populates="doctor")
-    specializations = relationship("Specialize", back_populates="doctor")
-
-
-# Define PublicServant table
-class PublicServant(Base):
-    __tablename__ = 'publicservant'
-
-    email = Column(String(60), ForeignKey('users.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    department = Column(String(50))
-
-    user = relationship("User", back_populates="publicservant")
-    records = relationship("Record", back_populates="publicservant")
-
-
-# Define Disease table
-class Disease(Base):
-    __tablename__ = 'disease'
-
-    diseasecode = Column(String(50), primary_key=True)
-    pathogen = Column(String(20))
-    description = Column(String(140))
-    id = Column(Integer, ForeignKey('diseasetype.id', onupdate='CASCADE', ondelete='CASCADE'))
-
-    diseasetype = relationship("DiseaseType", back_populates="diseases")
-    discovers = relationship("Discover", back_populates="disease")
-    patients = relationship("PatientDisease", back_populates="disease")
-    records = relationship("Record", back_populates="disease")
-
-
-# Define Discover table
-class Discover(Base):
-    __tablename__ = 'discover'
-
-    cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    diseasecode = Column(String(50), ForeignKey('disease.diseasecode', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    first_enc_date = Column(Date)
-
-    country = relationship("Country", back_populates="discovers")
-    disease = relationship("Disease", back_populates="discovers")
-
-
-# Define PatientDisease table
-class PatientDisease(Base):
-    __tablename__ = 'patientdisease'
-
-    email = Column(String(60), ForeignKey('users.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    diseasecode = Column(String(50), ForeignKey('disease.diseasecode', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-
-    user = relationship("User", back_populates="diseases")
-    disease = relationship("Disease", back_populates="patients")
-
-
-# Define Specialize table
-class Specialize(Base):
-    __tablename__ = 'specialize'
-
-    id = Column(Integer, ForeignKey('diseasetype.id', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    email = Column(String(60), ForeignKey('doctor.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-
-    diseasetype = relationship("DiseaseType", back_populates="specializations")
-    doctor = relationship("Doctor", back_populates="specializations")
-
-
-# Define Record table
-class Record(Base):
-    __tablename__ = 'record'
-
-    email = Column(String(60), ForeignKey('publicservant.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    diseasecode = Column(String(50), ForeignKey('disease.diseasecode', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    total_deaths = Column(Integer)
-    total_patients = Column(Integer)
-
-    publicservant = relationship("PublicServant", back_populates="records")
-    country = relationship("Country", back_populates="records")
-    disease = relationship("Disease", back_populates="records")
-
-
-inspector = inspect(engine)
-existing_tables = inspector.get_table_names()
-
-if not existing_tables:  # Only create tables if none exist
-    Base.metadata.create_all(engine)
-    print("Tables created successfully!")
-else:
-    print("Tables already exist, skipping creation.")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
