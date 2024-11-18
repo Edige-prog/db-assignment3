@@ -66,7 +66,7 @@ class User(Base):
     country = relationship("Country", back_populates="users")
     patient = relationship("Patient", uselist=False, back_populates="user")
     doctor = relationship("Doctor", uselist=False, back_populates="user")
-    public_servant = relationship("PublicServant", uselist=False, back_populates="user")
+    publicservant = relationship("PublicServant", uselist=False, back_populates="user")
     diseases = relationship("PatientDisease", back_populates="user")
 
 
@@ -121,7 +121,7 @@ class Discover(Base):
     __tablename__ = 'discover'
 
     cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    disease_code = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    diseasecode = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     first_enc_date = Column(Date)
 
     country = relationship("Country", back_populates="discovers")
@@ -156,11 +156,11 @@ class Record(Base):
 
     email = Column(String(60), ForeignKey('public_servant.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    disease_code = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    diseasecode = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     total_deaths = Column(Integer)
     total_patients = Column(Integer)
 
-    public_servant = relationship("PublicServant", back_populates="records")
+    publicservant = relationship("PublicServant", back_populates="records")
     country = relationship("Country", back_populates="records")
     disease = relationship("Disease", back_populates="records")
 
