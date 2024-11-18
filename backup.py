@@ -105,7 +105,7 @@ class PublicServant(Base):
 class Disease(Base):
     __tablename__ = 'disease'
 
-    disease_code = Column(String(50), primary_key=True)
+    diseasecode = Column(String(50), primary_key=True)
     pathogen = Column(String(20))
     description = Column(String(140))
     id = Column(Integer, ForeignKey('diseasetype.id', onupdate='CASCADE', ondelete='CASCADE'))
@@ -121,7 +121,7 @@ class Discover(Base):
     __tablename__ = 'discover'
 
     cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    diseasecode = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    diseasecode = Column(String(50), ForeignKey('disease.diseasecode', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     first_enc_date = Column(Date)
 
     country = relationship("Country", back_populates="discovers")
@@ -133,7 +133,7 @@ class PatientDisease(Base):
     __tablename__ = 'patientdisease'
 
     email = Column(String(60), ForeignKey('users.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    disease_code = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    diseasecode = Column(String(50), ForeignKey('disease.diseasecode', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
 
     user = relationship("User", back_populates="diseases")
     disease = relationship("Disease", back_populates="patients")
@@ -154,9 +154,9 @@ class Specialize(Base):
 class Record(Base):
     __tablename__ = 'record'
 
-    email = Column(String(60), ForeignKey('public_servant.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    email = Column(String(60), ForeignKey('publicservant.email', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     cname = Column(String(50), ForeignKey('country.cname', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
-    diseasecode = Column(String(50), ForeignKey('disease.disease_code', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
+    diseasecode = Column(String(50), ForeignKey('disease.diseasecode', onupdate='CASCADE', ondelete='CASCADE'), primary_key=True)
     total_deaths = Column(Integer)
     total_patients = Column(Integer)
 
