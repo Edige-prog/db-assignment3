@@ -85,7 +85,7 @@ def patients():
 @app.route('/patientdisease', methods=['GET', 'POST'])
 def patientdisease():
     patientdisease = PatientDisease.query.all()
-    return '<br>'.join([f"{data.email} - {data.disease_code}" for data in patientdisease])
+    return '<br>'.join([f"{data.email} - {data.diseasecode}" for data in patientdisease])
 @app.route('/country', methods=['GET', 'POST'])
 def country():
     countries = Country.query.all()
@@ -93,7 +93,7 @@ def country():
 @app.route('/record', methods=['GET', 'POST'])
 def record():
     records = Record.query.all()
-    return '<br>'.join([f"{data.email} - {data.cname} - {data.disease_code} - {data.total_deaths} - {data.total_patients}" for data in records])
+    return '<br>'.join([f"{data.email} - {data.cname} - {data.diseasecode} - {data.total_deaths} - {data.total_patients}" for data in records])
 
 
 @app.route('/specialize', methods=['GET', 'POST'])
@@ -109,7 +109,7 @@ def publicservant():
 @app.route('/disease', methods=['GET', 'POST'])
 def disease():
     disease = Disease.query.all()
-    return '<br>'.join([f"{data.disease_code} - {data.pathogen} - {data.description} - {data.id}" for data in disease])
+    return '<br>'.join([f"{data.diseasecode} - {data.pathogen} - {data.description} - {data.id}" for data in disease])
 
 @app.route('/diseasetype', methods=['GET', 'POST'])
 def diseasetype():
@@ -119,7 +119,7 @@ def diseasetype():
 @app.route('/discover', methods=['GET', 'POST'])
 def discover():
     discover = Discover.query.all()
-    return '<br>'.join([f"{data.cname} - {data.disease_code} - {data.first_enc_date}" for data in discover])
+    return '<br>'.join([f"{data.cname} - {data.diseasecode} - {data.first_enc_date}" for data in discover])
 
 
 
@@ -336,7 +336,7 @@ def delete_diseasetype():
     diseases = db.session.query(Disease).all()
     form = f.DeleteDisease([data for data in diseases])
     if form.validate_on_submit():
-        data_to_delete = db.get_or_404(Disease, form.disease_code.data)
+        data_to_delete = db.get_or_404(Disease, form.diseasecode.data)
         db.session.delete(data_to_delete)
         db.session.commit()
         return 'Successfully deleted'
@@ -401,12 +401,12 @@ def add_patientDisease():
     diseases = db.session.query(Disease).all()
 
     form = f.CreatePatientDisease([(data.email, data.email) for data in patients],
-                            [(data.disease_code, data.description) for data in diseases])
+                            [(data.diseasecode, data.description) for data in diseases])
 
     if form.validate_on_submit():
         new_patientdisease = PatientDisease(
             email=form.email.data,
-            disease_code=form.disease_code.data
+            diseasecode=form.diseasecode.data
         )
         db.session.add(new_patientdisease)
         db.session.commit()
@@ -422,8 +422,8 @@ def delete_patientdisease():
         d = ''.join(form.ans.data)
         d = d.split(' ')
         email = d[1][:-1]
-        disease_code = d[2][:-1]
-        data_to_delete = PatientDisease.query.filter_by(email=email, disease_code=disease_code).first()
+        diseasecode = d[2][:-1]
+        data_to_delete = PatientDisease.query.filter_by(email=email, diseasecode=diseasecode).first()
 
         # Check if the record exists, otherwise raise 404
         if data_to_delete is None:
@@ -480,7 +480,7 @@ def add_disease():
 
     if form.validate_on_submit():
         new_disease = Disease(
-            disease_code=form.disease_code.data,
+            diseasecode=form.diseasecode.data,
             pathogen=form.pathogen.data,
             description=form.description.data,
             id = form.id.data
@@ -496,7 +496,7 @@ def delete_disease():
     diseases = db.session.query(Disease).all()
     form = f.DeleteDisease([data for data in diseases])
     if form.validate_on_submit():
-        data_to_delete = db.get_or_404(Disease, form.disease_code.data)
+        data_to_delete = db.get_or_404(Disease, form.diseasecode.data)
         db.session.delete(data_to_delete)
         db.session.commit()
         return 'Successfully deleted'
@@ -507,12 +507,12 @@ def add_discover():
     countries = db.session.query(Country).all()
     diseasetypes = db.session.query(Disease).all()
 
-    form = f.Add_discover([(data.disease_code, data.description) for data in diseasetypes],[(data.cname, data.cname) for data in countries])
+    form = f.Add_discover([(data.diseasecode, data.description) for data in diseasetypes],[(data.cname, data.cname) for data in countries])
 
     if form.validate_on_submit():
         new_discover = Discover(
             cname=form.cname.data,
-            disease_code=form.disease_code.data,
+            diseasecode=form.diseasecode.data,
             first_enc_date=form.first_enc_date.data,
         )
         db.session.add(new_discover)
@@ -529,8 +529,8 @@ def delete_discover():
         d = ''.join(form.ans.data)
         d = d.split(' ')
         country = d[1][:-1]
-        disease_code = d[2][:-1]
-        data_to_delete = Discover.query.filter_by(cname=country, disease_code=disease_code).first()
+        diseasecode = d[2][:-1]
+        data_to_delete = Discover.query.filter_by(cname=country, diseasecode=diseasecode).first()
 
         # Check if the record exists, otherwise raise 404
         if data_to_delete is None:
@@ -547,12 +547,12 @@ def add_record():
     diseasetypes = db.session.query(Disease).all()
     publicservants = db.session.query(PublicServant).all()
 
-    form = f.Add_record([(data.disease_code, data.description) for data in diseasetypes],[(data.cname, data.cname) for data in countries], [(data.email, data.email) for data in publicservants])
+    form = f.Add_record([(data.diseasecode, data.description) for data in diseasetypes],[(data.cname, data.cname) for data in countries], [(data.email, data.email) for data in publicservants])
 
     if form.validate_on_submit():
         new_record = Record(
             cname=form.cname.data,
-            disease_code=form.disease_code.data,
+            diseasecode=form.diseasecode.data,
             email=form.email.data,
             total_deaths=form.total_deaths.data,
             total_patients=form.total_patients.data,
@@ -572,9 +572,9 @@ def delete_record():
         d = d.split(' ')
         email = d[1][:-1]
         country = d[2][:-1]
-        disease_code = d[3][:-1]
-        print(email, country, disease_code)
-        data_to_delete = Record.query.filter_by(email = email, cname=country, disease_code=disease_code).first()
+        diseasecode = d[3][:-1]
+        print(email, country, diseasecode)
+        data_to_delete = Record.query.filter_by(email = email, cname=country, diseasecode=diseasecode).first()
 
         # Check if the record exists, otherwise raise 404
         if data_to_delete is None:
